@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('./partials/head.ejs') %>
+  <title>Add New Blog - Blogify</title>
+</head>
+<body>
+  <%- include('./partials/nav.ejs') %>
+  <div class="container mt-5">
+    <div class="form-container">
+      <h2 class="form-title">Create New Blog Post</h2>
+      
+      <form action="/blog" method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+          <label for="coverImage" class="form-label">Cover Image</label>
+          <input type="file" class="form-control" id="coverImage" name="coverImage">
+        </div>
+        
+        <div class="mb-3">
+          <label for="title" class="form-label">Title</label>
+          <input type="text" class="form-control" id="title" name="title" placeholder="Enter blog title">
+        </div>
+        
+        <div class="mb-3">
+          <label for="body" class="form-label">Body</label>
+          <textarea class="form-control" name="body" id="body" rows="8" placeholder="Write your blog content here..."></textarea>
+        </div>
+        
+        <div class="d-flex gap-2">
+          <button class="btn btn-primary" type="submit">Submit</button>
+          <button class="btn btn-outline-primary" id="improveDescBtn" type="button">Improve Description</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <%- include('./partials/script.ejs') %>
+  <script>
+    document.getElementById('improveDescBtn').addEventListener('click', async (e) => {
+      e.preventDefault(); 
+      const bodyTextarea = document.getElementById('body');
+      const formData = new URLSearchParams();
+      formData.append('body', bodyTextarea.value);
+      const button = document.getElementById('improveDescBtn');
+      const originalText = button.textContent;
+      button.textContent = 'Improving...';
+      button.disabled = true;
+
+      try {
+        const response = await fetch('/improve-description', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: formData
+        });
+        const data = await response.json();
+        bodyTextarea.value = data.improvedText;
+      } catch (error) {
+        console.error('Error improving description:', error);
+      } finally {
+        button.textContent = originalText;
+        button.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

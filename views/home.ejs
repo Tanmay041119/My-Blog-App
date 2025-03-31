@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('./partials/head.ejs') %>
+  <title>Blogify - Home</title>
+</head>
+<body>
+  <%- include('./partials/nav.ejs') %>
+  <div class="container mt-5">
+    <h1 class="mb-4">Latest Blog Posts</h1>
+    <div class="blog-grid">
+      <% blogs.forEach(blog => { %>
+        <div class="card h-100">
+          <img src="<%= blog.coverImageURL %>" class="card-img-top" alt="<%= blog.title %>">
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title"><%= blog.title %></h5>
+            <div class="mt-auto">
+              <a href="/blog/<%= blog._id %>" class="btn btn-primary">View</a>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+  <%- include('./partials/script.ejs') %>
+</body>
+</html>
